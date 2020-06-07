@@ -48,19 +48,20 @@ public class EmployeesController {
 
     @GetMapping("/employees/characteristics")
     public String addCharacteristics(Model model) {
-        model.addAttribute("characteristics", new EmployeeStatusCharacteristics());
+        model.addAttribute("employeeStatusCharacteristics", new EmployeeStatusCharacteristics());
 
         return "employees-characteristics";
     }
 
     @PostMapping("/employees/characteristics")
-    public String addCharacteristics(Model model, @ModelAttribute EmployeeStatusCharacteristics characteristics, BindingResult bindingResult) {
+    public String addCharacteristics(Model model, @ModelAttribute EmployeeStatusCharacteristics employeeStatusCharacteristics,
+                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "index";
         }
 
         try {
-            employeeService.setCharacteristics(characteristics);
+            employeeService.setCharacteristics(employeeStatusCharacteristics);
             model.addAttribute("success", "Успешно добавена характеристика!");
         } catch (ErrorDataException e) {
             model.addAttribute("error", e.getMessage());

@@ -31,15 +31,10 @@ public class Company {
     @Column
     private String address;
 
-    @OneToOne
-    private CompanyFunds funds;
-
     @ElementCollection
     private Map<String, Integer> allDetails;
 
     @OneToMany
     private List<Employee> allEmployees;
 
-    @OneToOne
-    private EmployeeStatusCharacteristics employeesCharacteristics;
 }

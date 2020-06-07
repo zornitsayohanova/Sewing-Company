@@ -75,7 +75,7 @@
     <div class = "container justify-content-center">
 
         <label>Характеристики за служителите</label>
-        <form action="#" th:action="@{/employees/characteristics}" th:object="${characteristics}" method="post">
+        <form action="#" th:action="@{/employees/characteristics}" th:object="${employeeStatusCharacteristics}" method="post">
             <p>Вид служител</p>
             <select class="form-control mdb-select md-form colorful-select dropdown-primary" th:field="*{employeeStatus}">
                 <option th:each="status : ${T(com.company.company.entities.EmployeeStatus).values()}"
