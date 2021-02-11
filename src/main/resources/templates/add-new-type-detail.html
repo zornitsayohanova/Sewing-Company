@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        data-th-fragment="layout"
+        xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <th:block th:include="base-fragment::head"></th:block>
+    <title>Добавете нов вид детайл</title>
+</head>
+<body>
+<header th:replace="base-fragment::header"></header>
+
+<div class="box">
+    <div class="container justify-content-center">
+
+        <label>Добавете нов вид детайл </label>
+        <form class="centred" action="#" th:action="@{/details/add-new-type-detail}" th:object="${detailType}" method="post">
+            <p>Име на детайла</p>
+            <div class="form-group">
+                <input type="text" th:field="*{name}" class="form-control" />
+            </div>
+
+            <p>Цена на материалите</p>
+            <div class="form-group">
+                <input type="number" th:field="*{materialsPrice}" class="form-control" />
+            </div>
+
+            <p>Продажна цена</p>
+            <div class="form-group">
+                <input type="number" th:field="*{salePrice}" class="form-control" />
+            </div>
+
+            <p>Време за изработка</p>
+            <div class="form-group">
+                <input type="number" th:field="*{manufactureTime}" class="form-control" />
+            </div>
+
+            <p>Вид служител, който изработва детайла</p>
+            <select class="form-control mdb-select md-form colorful-select dropdown-primary" th:field="*{detailEmployeeStatus}">
+                <option th:each="employeeStatus : ${T(com.company.company.entities.EmployeeStatus).values()}"
+                        th:value="${employeeStatus}"
+                        th:text="${employeeStatus.getStatus()}">
+                </option>
+            </select>
+            <p>
+                <button class="btn btn-style w-75" type="submit">
+                    Изпрати
+                </button>
+            </p>
+        </form>
+    </div>
+    <img src="/css/detail.png">
+</div>
+</body>
+</html>

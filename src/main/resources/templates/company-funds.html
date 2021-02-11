@@ -5,104 +5,42 @@
         xmlns:th="http://www.thymeleaf.org"
 >
 <head>
-    <title>Company</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link
-            rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-            crossorigin="anonymous"
-    />
-
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <link rel="stylesheet" data-th-href="@{/css/main.css}" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $(".navbar").slideDown(1500).css("display", "flex");
-            $(".container").delay(1500).fadeIn(1000, 'swing');
-        });
-    </script>
+    <th:block th:include="base-fragment::head"></th:block>
+    <title>Отчет</title>
 </head>
 <body>
+<header th:replace="base-fragment::header"></header>
 
-<div class="navbar">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="companyDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                 Фирма
-            </a>
-            <div class="dropdown-menu" aria-labelledby="companyDropdown">
-                <a class="dropdown-item" href="/">Информация</a>
-            </div>
-            <div class="dropdown-menu" aria-labelledby="companyDropdown">
-                <a class="dropdown-item" href="/funds">Отчет</a>
-            </div>
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="employeeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                 Служители
-            </a>
-            <div class="dropdown-menu" aria-labelledby="employeeDropdown">
-                <a class="dropdown-item" href="/employees/all-employees">Всички служители</a>
-            </div>
-            <div class="dropdown-menu" aria-labelledby="employeeDropdown">
-                <a class="dropdown-item" href="/employees/add">Добавете служител</a>
-            </div>
-            <div class="dropdown-menu" aria-labelledby="employeeDropdown">
-                <a class="dropdown-item" href="/employees/characteristics">Характеристики</a>
-            </div>
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="detailsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                 Детайли
-            </a>
-            <div class="dropdown-menu" aria-labelledby="detailsDropdown">
-                <a class="dropdown-item" href="/details/all-details">Всички детайли</a>
-            </div>
-            <div class="dropdown-menu" aria-labelledby="detailsDropdown">
-                <a class="dropdown-item" href="/details/add">Добавете детайл</a>
-            </div>
-        </li>
-    </ul>
-</div>
-
-<div class = "box">
-    <div class = "container justify-content-center">
-
+<div class="box">
+    <div class="container justify-content-center">
         <label>Отчет</label>
-        <div th:if="${companyFunds != null}">
-           <form action="#" class="output" th:action="@{/funds}" th:object="${companyFunds}" method="post">
+        <div th:if="${company != null}">
+           <form class="centred output" action="#" th:action="@{/funds}" th:object="${company}" method="get">
             <p>Приходи</p>
             <div class="form-group">
-                <input type="text" name="id" data-th-value="${companyFunds.getProfit()}" readonly class="form-control"/>
+                <input type="text" name="id" data-th-value="${company.getProfit()}" readonly class="form-control"/>
             </div>
 
             <p>Разходи</p>
             <div class="form-group">
-                <input type="text" name="id" data-th-value="${companyFunds.loss}" readonly class="form-control"/>
+                <input type="text" name="id" data-th-value="${company.loss}" readonly class="form-control"/>
             </div>
 
             <p>Печалба</p>
             <div class="form-group">
-                <input type="text" name="id" data-th-value="${companyFunds.income}" readonly class="form-control"/>
+                <input type="text" name="id" data-th-value="${company.income}" readonly class="form-control"/>
             </div>
 
             <p>Печалба след ДДС</p>
             <div class="form-group">
-                <input type="text" name="id" data-th-value="${companyFunds.netIncome}" readonly class="form-control"/>
+                <input type="text" name="id" data-th-value="${company.netIncome}" readonly class="form-control"/>
             </div>
         </form>
         </div>
-        <div th:if="${#object.companyFunds == null}">
+        <div th:if="${#object.company == null}">
             <p class="nothing-added">Няма добавена информация за фирмата</p>
         </div>
     </div>
-
     <img src="/css/car.png">
 </div>
 </body>

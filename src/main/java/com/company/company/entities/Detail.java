@@ -1,38 +1,28 @@
 package com.company.company.entities;
 
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-
 public class Detail {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column
-    private String name;
-
-    @Column
-    private double productionPrice;
-
-    @Column
-    private double salePrice;
+    @ManyToOne
+    DetailType detail;
 
     @Column
     private String leatherColor;
 
-    @Column
-    private double materialsPrice;
-
-    @Column
-    private double workTime;
+    @ManyToOne
+    private Employee employee;
 }
-

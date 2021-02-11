@@ -1,3 +1,4 @@
+
 package com.company.company.controllers;
 
 import com.company.company.entities.EmployeeStatusCharacteristics;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class EmployeesController {
-
     @Autowired
     EmployeeService employeeService;
 
@@ -28,14 +28,12 @@ public class EmployeesController {
         if (bindingResult.hasErrors()) {
             return "index";
         }
-
         try {
             employeeService.addEmployee(employee);
-            model.addAttribute("success", "Успешно добавен служител!");
+            model.addAttribute("message", "Успешно добавен служител!");
         } catch (ErrorDataException e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("message", e.getMessage());
         }
-
         return "add-employee";
     }
 
@@ -59,20 +57,19 @@ public class EmployeesController {
         if (bindingResult.hasErrors()) {
             return "index";
         }
-
         try {
             employeeService.setCharacteristics(employeeStatusCharacteristics);
-            model.addAttribute("success", "Успешно добавена характеристика!");
+            model.addAttribute("message", "Успешно добавена характеристика!");
         } catch (ErrorDataException e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("message", e.getMessage());
         }
-
         return "employees-characteristics";
     }
 
     @RequestMapping("/created-details")
     public String showDetails(Model model, @RequestParam("id") Long id) {
-        model.addAttribute("employeeDetails", employeeService.getEmployeeDetails(id));
+        model.addAttribute("employeeDetails", employeeService.showEmployeeCreatedDetails(id));
+
         return "employee-details";
     }
 }

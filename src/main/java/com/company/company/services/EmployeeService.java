@@ -1,7 +1,5 @@
 package com.company.company.services;
-import com.company.company.entities.EmployeeStatusCharacteristics;
-import com.company.company.entities.Employee;
-import com.company.company.entities.EmployeeStatus;
+import com.company.company.entities.*;
 import com.company.company.exceptions.ErrorDataException;
 import com.company.company.repositories.CharacteristicsRepository;
 import com.company.company.repositories.EmployeeRepository;
@@ -29,14 +27,9 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Map<String, Integer> getEmployeeDetails(Long id){
-        Employee employee = employeeRepository.findById(id).get();
-
-        return employee.getDetails();
-    }
-
     public void setCharacteristics(EmployeeStatusCharacteristics characteristics) throws ErrorDataException {
         this.checkCharacteristics(characteristics);
+
         EmployeeStatus employeeStatus = characteristics.getEmployeeStatus();
 
         if (characteristicsRepository.existsByEmployeeStatus(employeeStatus)) {
@@ -57,13 +50,17 @@ public class EmployeeService {
         if(characteristicsRepository.count() == 0)
             throw new ErrorDataException("Моля, уверете се, че сте въвели информация за характеристиката на служителите!");
 
-        if(employeeRepository.findByIdSequence(employee.getIdSequence()) != null) {
+        if(employeeRepository.findById(employee.getId()).isPresent()) {
             throw new ErrorDataException("Този служител вече съществува!");
         }
 
         if(employee.getName().isBlank()){
             throw new ErrorDataException("Моля, въведете валидно име!");
         }
+    }
+
+    public Map<DetailType, Integer> showEmployeeCreatedDetails(long id) {
+        return employeeRepository.findById(id).get().getCreatedDetails();
     }
 
     public void checkCharacteristics(EmployeeStatusCharacteristics characteristics) throws ErrorDataException {

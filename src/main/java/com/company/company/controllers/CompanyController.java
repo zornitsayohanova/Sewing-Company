@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class IndexController {
-
-    @Autowired
-    private CompanyService companyService;
+public class CompanyController {
+   @Autowired
+   private CompanyService companyService;
 
     @RequestMapping("/")
     public String createCompany(Model model) {
@@ -27,24 +26,20 @@ public class IndexController {
     public String addCompany(Model model, @ModelAttribute Company company) {
         try {
             companyService.addCompany(company);
-            model.addAttribute("success", "Успешно въведени данни!");
+            model.addAttribute("message", "Успешно въведени данни!");
         } catch (ErrorDataException e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("message", e.getMessage());
         }
-
         return "index";
     }
 
     @RequestMapping("/funds")
     public String showFunds(Model model) {
-        model.addAttribute("companyFunds", companyService.setFunds());
-
+        try {
+            model.addAttribute("company", companyService.setFunds());
+        } catch (ErrorDataException e) {
+            model.addAttribute("message", e.getMessage());
+        }
         return "company-funds";
-    }
-
-    @PostMapping("/funds")
-    public String showFunds() {
-
-       return "company-funds";
     }
 }

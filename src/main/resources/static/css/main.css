@@ -1,7 +1,19 @@
 body {
-    background-color: #D6BEB0;
+    background-image: url("b.jpg");
     display:flex;
     flex-flow: column;
+}
+
+.message {
+    font-size: 20px;
+    font-family: Calibri, sans-serif;
+    font-weight: 300;
+}
+
+.alert {
+    background-color: #2b1e1e;
+    border-color: transparent;
+    color: #dedede;
 }
 
 #content {
@@ -15,7 +27,14 @@ body {
 }
 
 #messages {
+    padding-top: 0;
     position: fixed;
+    z-index: 90;
+}
+
+.close {
+    opacity: .8 !important;
+    color: white !important;
 }
 
 .center-flex-item {
@@ -39,9 +58,9 @@ body {
 }
 
 .navbar {
-    margin-top: 7%;
+    margin-top: 5%;
     margin-bottom: 0;
-    margin-right: 70px;
+    margin-right: 17%;
     display: none;
     padding-bottom: 8px;
     height: 70px;
@@ -54,7 +73,6 @@ body {
 }
 
 .navbar-nav .nav-link {
-    padding-right: 50px;
     font-size: 26px;
 }
 
@@ -70,8 +88,7 @@ body {
 .mr-auto,
 .mx-auto {
     margin-top: 0;
-    margin-left: auto !important;
-    margin-right: 0 !important;
+    margin-right: 0!important;
 }
 
 a {
@@ -81,17 +98,18 @@ a {
     letter-spacing: 0.062em;
     cursor: pointer;
     outline: none;
-    color: #521d20;
+    color: #342626;
 }
 
 a:hover, a:focus {
-    color: #81695d;
+    color: #624b45;
     text-decoration: blink;
 }
 
 .dropdown-menu {
     margin-top: 0;
-    padding: 2rem 1.25rem 0.2rem 1.25rem;
+    padding: 0;
+    width: 120%;
     float: left;
     font-size: 1.24rem;
     text-align: center;
@@ -99,7 +117,7 @@ a:hover, a:focus {
     border: none;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0);
     border-radius: 0;
-    background-color: #521d20;
+    background-color: #745037;
 }
 
 .dropdown-menu.show {
@@ -107,7 +125,7 @@ a:hover, a:focus {
 }
 
 .dropdown-item {
-    padding: 1rem 2.2rem;
+    padding: 2rem 0;
     font-size: 16px;
     letter-spacing: 0.04em;
     color: #D6D6D6;
@@ -118,7 +136,7 @@ a:hover, a:focus {
     display: block;
     outline: none;
     color: #D6D6D6;
-    background-color: #521d20;
+    background-color: #32160BDB;
 }
 
 .dropdown-toggle::after {
@@ -129,40 +147,43 @@ a:hover, a:focus {
     padding-right: 10px;
 }
 
+p, .form-group {
+    margin-bottom: 0 !important;
+}
+
 .container {
-    margin-top: -80px;
     margin-left: 0;
-    width: 45%;
-    height: max-content;
+    padding-bottom: 2%;
+    width: 50%;
+    height: auto;
     display: none;
     float: left;
-    background-color: #521D20;
+    background-color: #32160BDB;
 }
 
 .box {
+    margin: 1% auto 3% auto;
     display: flex;
+    width: 60%;
 }
 
 img {
     margin-right: 0;
     margin-left: auto;
-    margin-bottom: 40px;
-    width: 55%;
+    height: auto;
+    width: 51%;
     float: right;
 }
 
-form {
-    margin-top: 50px;
-    width: 60%;
+.centred {
+    margin-top: 9%;
+    width: 80%;
     margin-left: auto;
     margin-right: auto;
 }
 
 .form-control {
     height: 45px;
-    margin-bottom: 40px;
-    padding-bottom: 15px;
-    text-align: center;
     font-size: 23px;
     font-family: "Calibri";
     font-weight: 300;
@@ -187,7 +208,8 @@ form {
 }
 
 .nothing-added {
-    margin: 50px 0;
+    margin: 50px auto;
+    width: 80%;
 }
 
 .form-control::placeholder, .custom-control-label, p {
@@ -195,8 +217,7 @@ form {
     font-weight: 300;
     font-size: 23px;
     letter-spacing: 0.07em;
-    text-align: center;
-    color: #B1998B;
+    color: #CBB7AB;
     opacity: 1;
 }
 
@@ -233,28 +254,18 @@ select::-ms-expand {
 
 .table th {
     width: 50%;
-    font-family: Calibri;
-    font-weight: normal;
+    font-family: Calibri, sans-serif;
+    font-weight: 300;
     text-align: center;
     font-size: 22px;
     letter-spacing: 0.035em;
 }
 
 label:not(.custom-control-label):not(.all-details-label) {
-    margin-top: 15%;
+    margin: 7% auto 0 auto;
+    width: 80%;
     display: block;
     font-family: Comfortaa, sans-serif;
-    text-align: center;
-    font-weight: 400;
-    font-size: 23px;
-    color: #D6D6D6;
-}
-
-.all-details-label {
-    margin-top: 10%;
-    display: block;
-    font-family: Comfortaa, sans-serif;
-    text-align: center;
     font-weight: 400;
     font-size: 23px;
     color: #D6D6D6;
@@ -271,7 +282,7 @@ button:focus {
     font-family: "Comfortaa";
     border-radius: 0;
     box-shadow: 1px 3px 5px rgba(21, 21, 21, 0.86);
-    background-color: #80583C;
+    background-color: #7d573c;
 }
 
 .btn {
@@ -330,7 +341,7 @@ button:focus {
 }
 
 .employees-scrollbar {
-    height: 650px;
+    height: 500px;
 }
 
 @media (max-width: 429px) {

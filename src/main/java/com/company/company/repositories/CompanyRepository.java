@@ -2,5 +2,7 @@ package com.company.company.repositories;
 
 import com.company.company.entities.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface CompanyRepository extends JpaRepository<Company, Long> { }
+@Repository
+public interface CompanyRepository extends JpaRepository<Company, Long> {}

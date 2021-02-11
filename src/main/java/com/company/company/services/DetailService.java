@@ -1,17 +1,16 @@
 package com.company.company.services;
 import com.company.company.entities.*;
 import com.company.company.exceptions.ErrorDataException;
-import com.company.company.repositories.CharacteristicsRepository;
-import com.company.company.repositories.CompanyRepository;
-import com.company.company.repositories.DetailRepository;
-import com.company.company.repositories.EmployeeRepository;
+import com.company.company.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class DetailService {
+
+    @Autowired
+    DetailTypeRepository detailTypeRepository;
 
     @Autowired
     DetailRepository detailRepository;
@@ -25,100 +24,102 @@ public class DetailService {
     @Autowired
     CompanyRepository companyRepository;
 
-    public void addDetail(Detail detail) throws ErrorDataException {
-        this.checkDetail(detail);
+    public void addDetailType(DetailType detailType) throws ErrorDataException {
+        this.checkDetailType(detailType);
 
-        double workTime = detail.getWorkTime() * 60;
-        double materialsPrice = detail.getMaterialsPrice();
-        double statusSalary = this.findEmployeeStatusSalary(detail) / 60;
-        this.checkEmployee(statusSalary);
+        double workTime = detailType.getManufactureTime() * 60;
+        double materialsPrice = detailType.getMaterialsPrice();
 
-        detail.setProductionPrice(materialsPrice + (workTime * statusSalary));
-        this.addToCompany(detail);
+        EmployeeStatusCharacteristics detailEmployeeStatus = characteristicsRepository
+                .findByEmployeeStatus(detailType.getDetailEmployeeStatus());
+        double detailEmployeeStatusSalary = detailEmployeeStatus.getStatusSalary() / 60;
 
-        detailRepository.save(detail);
+        detailType.setProductionPrice(materialsPrice + (workTime * detailEmployeeStatusSalary));
+
+        detailTypeRepository.save(detailType);
     }
 
-    public double findEmployeeStatusSalary(Detail detail) {
+    public void addNewDetail(Detail detail) throws ErrorDataException {
+        this.checkDetail(detail);
+
+        DetailType detailType = detailTypeRepository.findByName(detail.getDetail().getName());
+        Employee employee = this.findAppropriateEmployee(detailType);
+
+        this.addDetailToEmployeeList(detailType, employee);
+        this.addDetail(detailType, detail, employee);
+    }
+
+    public void checkDetail(Detail detail) throws ErrorDataException {
+        if (employeeRepository.count() == 0 || characteristicsRepository.count() == 0) {
+            throw new ErrorDataException("Моля, уверете се, че сте въвели " +
+                    "характеристика на служителите и самите служители!");
+        }
+
+        if (detailTypeRepository.findByName(detail.getDetail().getName()) == null) {
+            throw new ErrorDataException("Моля, уверете се, че сте въвели предварително вида на детайла " +
+                    "и неговата характеристика!");
+        }
+    }
+
+    public void checkDetailType(DetailType detail) throws ErrorDataException {
+        if (employeeRepository.count() == 0 || characteristicsRepository.count() == 0) {
+            throw new ErrorDataException("Моля, уверете се, че сте въвели " +
+                    "характеристика на служителите и самите служители!");
+        }
+
+        if (detail.getSalePrice() <= 0 || detail.getMaterialsPrice() <= 0 || detail.getManufactureTime() <= 0) {
+            throw new ErrorDataException("Моля, въведете валидни стойности!");
+        }
+
+        if (detailTypeRepository.existsByName(detail.getName())) {
+            throw new ErrorDataException("Този детайл вече съществува! Моля, сменете името.");
+        }
+    }
+
+    public Employee findAppropriateEmployee(DetailType detailType) throws ErrorDataException {
+        EmployeeStatus detailEmployeeStatus = detailType.getDetailEmployeeStatus();
+
         List<Employee> employees = employeeRepository.findAll();
 
         for (Employee employee : employees) {
             EmployeeStatus employeeStatus = employee.getStatus();
 
-            EmployeeStatusCharacteristics characteristics = characteristicsRepository.findByEmployeeStatus(employeeStatus);
+            EmployeeStatusCharacteristics characteristics = characteristicsRepository
+                    .findByEmployeeStatus(employeeStatus);
 
             int maxDetails = characteristics.getMaxDetails();
-            double statusSalary = characteristics.getStatusSalary();
 
-            if (employee.getDetails().size() < maxDetails) {
-                this.addToEmployeeList(employee, detail);
+            if (employee.getCreatedDetails().values().stream().reduce(0, Integer::sum) < maxDetails &&
+                    employeeStatus == detailEmployeeStatus) {
+                employeeRepository.save(employee);
 
-                return statusSalary;
+                return employee;
             }
         }
-        return -1;
+        throw new ErrorDataException("Всички работници са с достигнат максимум произведени изделия. " +
+                "Ако желаете, моля, въведете нов служител или" +
+                " променете максималния брой произвеждани изделия при всяка категория служител.");
     }
 
-    public void addToEmployeeList(Employee employee, Detail detail) {
+    public void addDetail(DetailType detailType, Detail detail, Employee employee) {
+        detailType.setAmount(detailType.getAmount() + 1);
+        detail.setDetail(detailType);
+        detail.setEmployee(employee);
 
-        if (!employee.getDetails().containsKey(detail.getName())) {
-            employee.getDetails().put(detail.getName(), 1);
+        detailTypeRepository.save(detailType);
+        detailRepository.save(detail);
+    }
+
+    public void addDetailToEmployeeList(DetailType detailType, Employee employee) {
+        if (employee.getCreatedDetails().containsKey(detailType)) {
+            int count = employee.getCreatedDetails().get(detailType);
+            employee.getCreatedDetails().put(detailType, count + 1);
         } else {
-            int count = employee.getDetails().get(detail.getName());
-            employee.getDetails().put(detail.getName(), count + 1);
+            employee.getCreatedDetails().put(detailType, 1);
         }
     }
 
-    public void addToCompany(Detail detail) {
-        Company company = companyRepository.findAll().get(0);
-
-        if (!company.getAllDetails().containsKey(detail.getName())) {
-            company.getAllDetails().put(detail.getName(), 1);
-        } else {
-            int count = company.getAllDetails().get(detail.getName());
-            company.getAllDetails().put(detail.getName(), count + 1);
-        }
-    }
-
-    public Map<String, Integer> showDetails() {
-        if(companyRepository.count() == 0)
-            return null;
-
-        Company company = companyRepository.findAll().get(0);
-
-        return company.getAllDetails();
-    }
-
-    public int showDetailsAmount() {
-        Map<String, Integer> allDetails = companyRepository.findAll().get(0).getAllDetails();
-        int amount = 0;
-
-        for (int value : allDetails.values()) {
-            amount += value;
-        }
-        return amount;
-    }
-
-    public void checkDetail(Detail detail) throws ErrorDataException {
-        if (companyRepository.count() == 0 || employeeRepository.count() == 0 || characteristicsRepository.count() == 0) {
-            throw new ErrorDataException("Моля, уверете се, че сте въвели информация за фирмата, " +
-                                         "характеристиката на служителите и самите служители!");
-        }
-
-        if (detail.getSalePrice() <= 0 || detail.getMaterialsPrice() <= 0 || detail.getWorkTime() <= 0) {
-            throw new ErrorDataException("Моля, въведете валидни стойности!");
-        }
-
-        if (detailRepository.existsByName(detail.getName())) {
-            if (detailRepository.findByName(detail.getName()).getLeatherColor().equals(detail.getLeatherColor())) {
-                throw new ErrorDataException("Този детайл вече съществува! Моля, сменете името или цвета.");
-            }
-        }
-    }
-
-    public void checkEmployee(double statusSalary) throws ErrorDataException {
-        if (statusSalary < 0) {
-            throw new ErrorDataException("Достигнат максимум за изработка от текущите служители. Моля, въведете нов служител!");
-        }
+    public List<DetailType> showAllDetailTypes() {
+        return detailTypeRepository.findAll();
     }
 }

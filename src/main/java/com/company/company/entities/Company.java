@@ -1,20 +1,17 @@
 package com.company.company.entities;
 
-import java.util.List;
-import java.util.Map;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-
 public class Company {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -30,11 +27,4 @@ public class Company {
 
     @Column
     private String address;
-
-    @ElementCollection
-    private Map<String, Integer> allDetails;
-
-    @OneToMany
-    private List<Employee> allEmployees;
-
 }

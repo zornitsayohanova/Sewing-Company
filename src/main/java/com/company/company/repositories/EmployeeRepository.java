@@ -2,7 +2,7 @@ package com.company.company.repositories;
 
 import com.company.company.entities.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    Employee findByIdSequence(String idSequence);
-}
+@Repository
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {}

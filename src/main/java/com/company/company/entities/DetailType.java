@@ -1,7 +1,5 @@
 package com.company.company.entities;
 
-import java.util.List;
-import java.util.Map;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Employee {
+public class DetailType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -22,9 +20,21 @@ public class Employee {
     private String name;
 
     @Column
-    private EmployeeStatus status;
+    private double productionPrice;
 
-    @ElementCollection
-    @MapKeyColumn(table = "detail_type", name = "name")
-    Map<DetailType, Integer> createdDetails;
+    @Column
+    private double salePrice;
+
+    @Column
+    private int amount;
+
+    @Column
+    private double materialsPrice;
+
+    @Column
+    private double manufactureTime;
+
+    @Column
+    private EmployeeStatus detailEmployeeStatus;
 }
+
