@@ -1,5 +1,5 @@
 body {
-    background-image: url("b.jpg");
+    background-image: url("background.jpg");
     display:flex;
     flex-flow: column;
 }
